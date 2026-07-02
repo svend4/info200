@@ -61,7 +61,7 @@ info30/
 
 | Заявленный каталог | Фактически |
 |---|---|
-| `instructions/coding|architecture|testing|best-practices/` | нет (есть только `deployment/`) |
+| `instructions/{coding, architecture, testing, best-practices}/` | нет (есть только `deployment/`) |
 | `agents/agent-configs/`, `agents/agent-templates/` | нет |
 | `skills/skill-templates/` | нет |
 | `templates/` (code-/project-/documentation-templates) | нет полностью |
