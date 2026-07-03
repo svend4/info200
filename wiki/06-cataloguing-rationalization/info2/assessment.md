@@ -13,7 +13,7 @@
 
 ## Чего нет
 
-- **Файла LICENSE** — README заканчивается «MIT License — см. файл [LICENSE](LICENSE)», но `LICENSE`, `LICENSE.md`, `LICENSE.txt` возвращают 404. MIT указан только в package.json.
+- **Файла LICENSE** — README заканчивается «MIT License — см. файл `LICENSE`», но `LICENSE`, `LICENSE.md`, `LICENSE.txt` возвращают 404. MIT указан только в package.json.
 - **Lock-файлов** (`prototype/package-lock.json`, `frontend/package-lock.json` — 404). Из-за этого **CI неработоспособен по построению**: `ci.yml` использует `npm ci` и `cache-dependency-path: prototype/package-lock.json` — `npm ci` без lock-файла падает. Фактические запуски Actions не проверены (нет доступа), но структурно пайплайн пройти не может.
 - **Точки входа `prototype/index.js`** — в package.json `"main": "index.js"`, файла нет (404); `require('@thub/core')` сломан.
 - **Реального деплоя** — стадии deploy-staging/deploy-production в ci.yml — заглушки `echo "Deploying..."` с закомментированными kubectl/helm-командами; URL thub.io/staging.thub.io — вымышленные.
