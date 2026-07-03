@@ -4,9 +4,9 @@
 
 1. **Добавить файл LICENSE (MIT)** — README уже обещает MIT, нужен сам файл.
 2. **Синхронизировать README с кодом**: убрать требование Flask (API на stdlib), поправить список модулей, добавить ссылку на docs/DOCUMENTATION.md, дать честный статус «прототип».
-3. **Удалить из git runtime-состояние**: `orchestrator/state/*.json` (особенно `users.json` с хэшами паролей — админский хэш соответствует паролю «admin»), `orchestrator/cache/`, `orchestrator/tasks/`, `orchestrator/logs/`; добавить их в .gitignore, оставить `*.example`-шаблоны.
+3. **Удалить из git runtime-состояние**: `orchestrator/state/*.json` (особенно `users.json` с хэшами паролей — админский хэш соответствует паролю «admin»), `orchestrator/cache/`, `orchestrator/tasks/`, `orchestrator/logs/`. Правила в `.gitignore` уже есть (`cache/`, `logs/`, `tasks/`, `state/*.json`), но файлы закоммичены раньше и остаются отслеживаемыми — нужен `git rm --cached -r`; заодно поправить шаблон `state/*.json` (он заякорен на корень и не покрывает `orchestrator/state/`) и оставить `*.example`-шаблоны.
 4. **Проверить git-историю на утёкший MiniMax API-ключ** (коммит «SECURITY: remove hardcoded...») и, если ключ там, отозвать его и переписать историю (git filter-repo) или считать ключ скомпрометированным.
-5. **Убрать хардкод `/workspace/orchestrator`** из hermes_llm.py, monitor_daemon.py, stress_test.py, openclaw_integration.py, hybrid_orchestrator.py — заменить на `Path(__file__).parent` (как уже сделано в orchestrator_v5.py) или переменную окружения.
+5. **Убрать хардкод `/workspace/orchestrator`** из hermes_llm.py, monitor_daemon.py, stress_test.py, openclaw_integration.py, hybrid_orchestrator.py, perf_test.py, test_full.py — заменить на `Path(__file__).parent` (как уже сделано в orchestrator_v5.py) или переменную окружения.
 6. **Переместить архивные версии** (orchestrator.py, orchestrator_v4.py, hybrid_orchestrator.py, orchestrate*.sh) в `legacy/`, а демо-артефакты (Tesla-анализ, QUICK_REFERENCE.txt) в `examples/` — корень станет читаемым.
 7. **Решить судьбу PR #5** (v6): смёржить или закрыть — открытый PR с июня без движения размывает статус проекта.
 
