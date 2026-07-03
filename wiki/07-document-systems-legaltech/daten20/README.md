@@ -1,0 +1,53 @@
+# daten20 — «Document Management System»: от планировщика соцуслуг до «Пустоты v30»
+
+## Обзор
+
+**daten20** — крупнейший по объёму кода репозиторий в профиле svend4 (по самоотчётам ~214 тыс. строк в ~399 исходных файлах — цифра не перепроверена полностью, см. ниже). Заявлен как «Enterprise-Ready Document Management System для планирования социальных услуг» с AI/ML-возможностями, аналитикой и автоматизацией. Фактически это два проекта в одном:
+
+1. **Реальное ядро** — система работы с «мега-шаблоном интегрированного профессионального планирования услуг персонального бюджета» (файл `mSchablone`): парсер шаблонов, финансовый калькулятор с немецкими ставками социального страхования (KV/PV/RV/AV/UV, умлаги U1/U2/U3, отдельный тариф по уходу для Саксонии), генератор документов, веб-интерфейс, 16 CLI-приложений (`doc-processor.py`, `doc-comparator.py`, `doc-anonymizer.py`, `doc-ocr.py`, `doc-translator.py` и др. — существование проверено).
+2. **Экспоненциальная AI-надстройка** — около 70 директорий в `src/` с модулями от вполне приземлённых (`search`, `security`, `analytics`, `ml`) до откровенно спекулятивных: `bci` (интерфейс мозг-компьютер), `quantum_ml`, `consciousness`, `agi`, `asi_beyond_human`, `cosmic_universal`, `meta_reality`, `absolute_singularity`, `beyond_absolute` и финальный `the_void` («v30.0: Пустота за пределами всего» — философский модуль-шутка, возвращающий `None`).
+
+Репозиторий развивался лавинообразно: 729 коммитов, 116+ pull request'ов, версии v8.0–v23.0 «выпущены» в один день (2026-01-19 по `docs/CHANGELOG.md`). Разработка велась с интенсивным участием ИИ (соавтор коммитов — claude).
+
+## Назначение и идея
+
+Исходная идея — практичная и узкая: автоматизировать составление и калькуляцию карточек социальных услуг для немецкой системы «персонального бюджета» (Persönliches Budget). Шаблон `mSchablone` (на русском языке) описывает паспорт услуги, целевые группы, регион, квалификацию исполнителя; `src/models/financial.py` содержит реальные ставки работодательской доли соцстрахования Германии и умлаги — это настоящая предметная логика.
+
+Дальше проект превратился в полигон ИИ-ассистированной разработки: на ядро наслаивались «версии» v5–v30 — федеративное обучение, объяснимый ИИ, нейросимволика, квантовое МО, BCI, «сознание», AGI/ASI и, наконец, «Пустота». Собственный аудит проекта (`AUDIT_REPORT.md`, 2026-01-11) честно делит результат: «🟢 ВЫСОКОЕ качество для v1–20, 🟡 КОНЦЕПТУАЛЬНОЕ для v21–30» — хотя README продаёт всё как production.
+
+## Как устроено (архитектура)
+
+- **Корень**: 16 CLI-приложений (`doc-*.py`, `dms-admin.py`, `enterprise-admin.py`, `locustfile.py`), `mSchablone` (исходный мега-шаблон), `setup.py`, `Dockerfile`, `docker-compose.yml`, `Makefile`, `requirements.txt`, десятки markdown-самоотчётов (`AUDIT_REPORT.md`, `ARCHITECTURE.md`, `CHANGELOG.md`, `CONTRIBUTING.md` и др.).
+- **`src/`** (~70 директорий): ядро `core/` (parser, validator, exporter, database), `models/` (service, financial, template), `utils/`, шесть прикладных модулей уровня src (template_analyzer, financial_calculator, document_generator, interactive_editor, service_manager, web_app), затем слои enterprise (api, security, microservices, monitoring…) и AI-слои v11–v30. Многие AI-модули выполнены в «dual-version»: чистый Python (без зависимостей, упрощённый) + NumPy-вариант.
+- **`tests/`**: ~80 файлов `test_*.py` на верхнем уровне — почти по одному на каждый модуль `src/`, включая всю AI-надстройку (`test_consciousness.py`, `test_quantum_ml.py`, `test_bci.py`, `test_absolute_singularity.py`, `test_cosmic_universal.py`, `test_asi_beyond_human.py` — существование проверено) — плюс ~18 поддиректорий, зеркалящих `src/` (unit, integration, e2e, performance, fixtures, core, ai, security, microservices, iot…); фикстуры в `conftest.py` осмысленные, про предметную область (услуга, брутто-ставка, региональный коэффициент). **Но CI запускает лишь 7 из этих файлов** (`test_doc_*.py`) — см. ниже.
+- **Инфраструктура**: 13 workflow GitHub Actions (tests, ci, e2e, security, release, auto-merge…), `k8s/`, `nginx/`, `alembic/`, `mobile_sdks/` (Swift/Kotlin — отсюда 0,4 % Swift и Kotlin в статистике языков), `web/`, `sdks/`.
+
+Подробности — в [structure.md](structure.md).
+
+## Статус и активность
+
+- 729 коммитов в main; **последний человеческий коммит — 22 января 2026** (merge PR #116). «Обновление 2026-04-13» — это лишь автоматические ветки dependabot (transformers, torch, spacy и др.), не влитые в main.
+- GitHub Actions живы (2500+ прогонов): workflow «Tests» проходит, но по `tests.yml` он запускает **только 7 файлов** `tests/test_doc_*.py` из ~80 имеющихся (тесты AI-модулей — `test_consciousness.py`, `test_quantum_ml.py`, `test_asi_beyond_human.py` и др. — в CI не запускаются вовсе); workflow «Coverage Report» стабильно падает.
+- 0 звёзд, 0 форков. Issues/PR-активность после января 2026 — только dependabot.
+- Сюжетно проект **самозавершился**: последняя «версия» v30 — модуль `the_void` со статусом `∅` («то, что нельзя версионировать»). Roadmap v5.0+ помечен «PLANNED 0%» и не начат.
+
+## Ключевые факты
+
+| Параметр | Значение |
+|---|---|
+| Язык | Python 95,5 % (+ HTML, Shell, JS, Swift, Kotlin) |
+| Размер | по самоотчётам ~214 654 строк / ~399 исходных файлов (не перепроверено полностью); подтверждено прямыми запросами: 72 директории в `src/`, ~80 файлов `test_*.py` в `tests/`, 150+ файлов в `docs/`, 16 CLI-скриптов в корне |
+| Коммиты | 729 (main) |
+| Последняя активность | 22.01.2026 (main); 13.04.2026 — только ветки dependabot |
+| CI/CD | 13 workflow; Tests — зелёный (гоняет 7 из ~80 тест-файлов), Coverage — красный |
+| Лицензия | **файла LICENSE нет** (404), несмотря на MIT-бейдж в README |
+| Статус | завершённый (сюжетно — v30 «The Void»), фактически законсервирован |
+| Зрелость | 3/5 |
+
+## Ссылки
+
+- [Структура](structure.md)
+- [Характеристика и оценка](assessment.md)
+- [Рекомендации](recommendations.md)
+- [Вопросы](questions.md)
+- Репозиторий: https://github.com/svend4/daten20
